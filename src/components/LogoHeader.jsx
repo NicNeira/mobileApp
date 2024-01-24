@@ -4,9 +4,9 @@ import { logo } from '../data/example\'image'
 
 export const LogoHeader = () => {
   return (
-    <View style={{ display: 'flex', flexDirection: 'row' }}>
+    <View style={{ display: 'flex', flexDirection: 'row', padding: 20 }}>
       <Image source={logo} />
-      <Text style={{ textAlign: 'center', verticalAlign: 'middle', fontSize: 46 }}>Pruebaaa</Text>
+      <Text style={{ textAlign: 'center', verticalAlign: 'middle', fontSize: 46, paddingLeft: 20 }}>Prueba</Text>
     </View>
   )
 }

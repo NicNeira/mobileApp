@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Modal, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { DATA } from '../data/example-list'
 import { LogoHeader } from './LogoHeader'
 import { VideoInfo } from './VideoInfo.jsx'
+import { CloseIcon } from '../images/svg/CloseIcon.jsx'
 import Video from 'react-native-video'
 
 export const Prueba = () => {
@@ -25,9 +26,9 @@ export const Prueba = () => {
     }
   })
 
-  console.log('selectedVideo', selectedVideo)
   return (
     <>
+      <StatusBar barStyle='default' />
       <LogoHeader />
       <FlatList
         data={DATA}
@@ -42,18 +43,16 @@ export const Prueba = () => {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View style={{ marginTop: 22 }}>
+        <View style={{ display: 'flex', flexDirection: 'row', backgroundColor: 'blue' }}>
           <View>
-            {selectedVideo && <Video
-              source={{ uri: selectedVideo }} ref={(ref) => {
-                this.player = ref
-              }} // Store reference
-              onBuffer={this.onBuffer} // Callback when remote video is buffering
-              onError={this.videoError} // Callback when video cannot be loaded
-              style={styles.backgroundVideo}
-                              />}
-            <Text style={{ fontSize: 24 }} onPress={() => setModalVisible(!modalVisible)}>Cerrar</Text>
+            <Text>Text in modal!</Text>
           </View>
+          {/* flex: 1 Añadido para empujar el contenido a la derecha    */}
+          <View style={{ flex: 1 }} />
+          <TouchableOpacity onPress={() => setModalVisible(false)} style={{ backgroundColor: 'red' }}>
+            <CloseIcon />
+          </TouchableOpacity>
+          <View />
         </View>
       </Modal>
     </>
