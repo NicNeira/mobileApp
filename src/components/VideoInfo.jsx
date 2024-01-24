@@ -1,12 +1,24 @@
 import React from 'react'
-import { Image, StatusBar, StyleSheet, Text, View } from 'react-native'
-import { logo } from '../data/example\'image'
+import { StatusBar, StyleSheet, Text, View } from 'react-native'
+import { ResizeMode, Video } from 'expo-av'
 
-export const VideoInfo = ({ title }) => {
+export const VideoInfo = ({ title, videoProps }) => {
+  const video = React.useRef(null)
+  const [status, setStatus] = React.useState({})
+
   return (
     <View style={styles.item}>
-      <Image source={logo} />
-      <Text style={styles.title}>{title}</Text>
+      <Video
+        source={{
+          uri: videoProps
+        }}
+        useNativeControls
+        resizeMode={ResizeMode.CONTAIN}
+        isLooping
+        onPlaybackStatusUpdate={status => setStatus(() => status)}
+        style={{ width: 200, height: 200 }}
+      />
+      <Text style={styles.title} numberOfLines={1}>{title}</Text>
     </View>
   )
 }
@@ -25,13 +37,14 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    flexWrap: 'wrap',
     borderRadius: 10
 
   },
   title: {
-    fontSize: 32,
+    flex: 1,
+    fontSize: 22,
     color: '#fff',
     paddingLeft: 20
-
   }
 })

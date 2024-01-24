@@ -1,6 +1,4 @@
 import React from 'react'
-import Constant from 'expo-constants'
-import { Text, View, Image, ScrollView, FlatList, StyleSheet } from 'react-native'
 import { Prueba } from './Prueba'
 
 const Main = () => {

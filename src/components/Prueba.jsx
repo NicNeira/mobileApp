@@ -5,6 +5,8 @@ import { LogoHeader } from './LogoHeader'
 import { VideoInfo } from './VideoInfo.jsx'
 import { CloseIcon } from '../images/svg/CloseIcon.jsx'
 import { Video, ResizeMode } from 'expo-av'
+import videoFile from '../../assets/videos/02. Pantalla principal envasadora stiavelli.mov'
+import { videoNameList } from '../data/video-name-list.js'
 
 export const Prueba = () => {
   const [modalVisible, setModalVisible] = useState(false)
@@ -51,9 +53,9 @@ export const Prueba = () => {
       <StatusBar barStyle='default' />
       <LogoHeader />
       <FlatList
-        data={DATA}
+        data={videoNameList}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handlePress(item)}><VideoInfo title={item.title} /></TouchableOpacity>
+          <TouchableOpacity onPress={() => handlePress(item)}><VideoInfo title={item.name} videoProps={item.URL} /></TouchableOpacity>
         )}
         keyExtractor={item => item.id}
       />
@@ -79,9 +81,7 @@ export const Prueba = () => {
             <Video
               ref={video}
               style={styles.video}
-              source={{
-                uri: 'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4'
-              }}
+              source={videoFile}
               useNativeControls
               resizeMode={ResizeMode.CONTAIN}
               isLooping
