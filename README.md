@@ -20,9 +20,9 @@ npx expo start
 ```
 
 ### Generate APK
-`eas build:configure`
+- Ejecute `eas build:configure`
 
-in the `eas.json`
+- In the `eas.json`
 
 ```
 {
@@ -54,4 +54,6 @@ in the `eas.json`
 
 ```
 
-Next step ejecute `eas build -p android --profile preview` an generate a link for download apk 🎉
+- Next step ejecute 
+
+`eas build -p android --profile preview` and generate a link for download apk 🎉
