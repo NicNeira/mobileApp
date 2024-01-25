@@ -1,22 +1,21 @@
 import React, { useState } from 'react'
 import { Button, FlatList, Modal, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { DATA } from '../data/example-list'
 import { LogoHeader } from './LogoHeader'
 import { VideoInfo } from './VideoInfo.jsx'
-import { CloseIcon } from '../images/svg/CloseIcon.jsx'
+import { CloseIcon } from '../../assets/svg/CloseIcon.jsx'
 import { Video, ResizeMode } from 'expo-av'
-import videoFile from '../../assets/videos/02. Pantalla principal envasadora stiavelli.mov'
-import { videoNameList } from '../data/video-name-list.js'
 
-export const Prueba = () => {
+export const Prueba = ({ videos }) => {
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedVideo, setSelectedVideo] = useState(null)
+
+  console.log(selectedVideo)
 
   const video = React.useRef(null)
   const [status, setStatus] = React.useState({})
 
-  const handlePress = () => {
-    setSelectedVideo('https://www.youtube.com/watch?v=qi87b6VcIHY&t=681s&ab_channel=midudev')
+  const handlePress = (item) => {
+    setSelectedVideo(item.uri)
     setModalVisible(true)
   }
 
@@ -52,13 +51,15 @@ export const Prueba = () => {
     <>
       <StatusBar barStyle='default' />
       <LogoHeader />
-      <FlatList
-        data={videoNameList}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handlePress(item)}><VideoInfo title={item.name} videoProps={item.URL} /></TouchableOpacity>
-        )}
-        keyExtractor={item => item.id}
-      />
+      {videos.lenght === 0
+        ? <Text>No hay videos</Text>
+        : <FlatList
+            data={videos}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => handlePress(item)}><VideoInfo title={item.filename} videoSource={item.uri} /></TouchableOpacity>
+            )}
+            keyExtractor={item => item.id}
+          />}
       <Modal
         animationType='slide'
         transparent={false}
@@ -78,15 +79,19 @@ export const Prueba = () => {
             <View />
           </View>
           <View style={styles.container}>
-            <Video
-              ref={video}
-              style={styles.video}
-              source={videoFile}
-              useNativeControls
-              resizeMode={ResizeMode.CONTAIN}
-              isLooping
-              onPlaybackStatusUpdate={status => setStatus(() => status)}
-            />
+            {selectedVideo
+              ? <Video
+                  ref={video}
+                  style={styles.video}
+                  source={{
+                    uri: selectedVideo
+                  }}
+                  useNativeControls
+                  resizeMode={ResizeMode.CONTAIN}
+                  isLooping
+                  onPlaybackStatusUpdate={status => setStatus(() => status)}
+                />
+              : <Text>No hay video</Text>}
             <View style={styles.buttons}>
               <Button
                 title={status.isPlaying ? 'Pause' : 'Play'}

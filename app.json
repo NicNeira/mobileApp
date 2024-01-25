@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "mobile-expo",
-    "slug": "mobile-expo",
+    "name": "Envasadora Stiavelli",
+    "slug": "Envasadora Stiavelli",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo-lucchetti@2x-150x150.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -20,7 +20,10 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "permissions": [
+          "READ_EXTERNAL_STORAGE"
+        ]
       },
       "package": "com.pipita.mobileexpo"
     },
@@ -38,5 +41,6 @@
     "updates": {
       "url": "https://u.expo.dev/81b73ae3-8b59-48c3-aba7-fa82467613cd"
     }
+    
   }
 }

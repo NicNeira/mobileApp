@@ -1,6 +1,4 @@
 import React from 'react'
-// import { StatusBar } from 'expo-status-bar' // Para la barra superior de la app/celular
-// import { Alert, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 import Main from './src/components/Main'
 
 export default function App () {

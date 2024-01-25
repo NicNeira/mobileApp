@@ -1,23 +1,31 @@
-import React from 'react'
-import { StatusBar, StyleSheet, Text, View } from 'react-native'
-import { ResizeMode, Video } from 'expo-av'
+import React, { useEffect, useState } from 'react'
+import { Image, StatusBar, StyleSheet, Text, View } from 'react-native'
+import * as VideoThumbnails from 'expo-video-thumbnails'
 
-export const VideoInfo = ({ title, videoProps }) => {
-  const video = React.useRef(null)
-  const [status, setStatus] = React.useState({})
+export const VideoInfo = ({ title, videoSource }) => {
+  const [image, setImage] = useState(null)
+
+  const generateThumbnail = async () => {
+    try {
+      const { uri } = await VideoThumbnails.getThumbnailAsync(
+        videoSource,
+        {
+          time: 15000
+        }
+      )
+      setImage(uri)
+    } catch (e) {
+      console.warn(e)
+    }
+  }
+
+  useEffect(() => {
+    generateThumbnail()
+  }, [])
 
   return (
     <View style={styles.item}>
-      <Video
-        source={{
-          uri: videoProps
-        }}
-        useNativeControls
-        resizeMode={ResizeMode.CONTAIN}
-        isLooping
-        onPlaybackStatusUpdate={status => setStatus(() => status)}
-        style={{ width: 200, height: 200 }}
-      />
+      {image ? <Image source={{ uri: image }} style={styles.image} /> : <Text>Loading...</Text>}
       <Text style={styles.title} numberOfLines={1}>{title}</Text>
     </View>
   )
@@ -29,7 +37,7 @@ const styles = StyleSheet.create({
     marginTop: StatusBar.currentHeight || 0
   },
   item: {
-    backgroundColor: '#ff1b15',
+    backgroundColor: '#fec115',
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
@@ -45,6 +53,14 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 22,
     color: '#fff',
-    paddingLeft: 20
+    marginLeft: 20,
+    padding: 10,
+    backgroundColor: '#ff1b15',
+    borderRadius: 10
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 10
   }
 })
