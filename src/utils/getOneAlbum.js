@@ -3,7 +3,6 @@ import * as MediaLibrary from 'expo-media-library'
 export const getOneAlbum = async (albumName, albumsAll, paginationInfo) => {
   // Get one Album
   const album = albumsAll.find(album => album.title === albumName)
-  console.log('album.title', album.title)
 
   if (album) {
     try {

@@ -1,28 +1,37 @@
-import React, { useState } from 'react'
-import { Alert, Modal, StyleSheet, Text, Pressable, View, Button, ScrollView } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Alert, Modal, StyleSheet, Text, View, Button, ScrollView, Image } from 'react-native'
 import { getOneAlbum } from '../utils/getOneAlbum'
+import logo from '../../assets/marca_lucchetti-040822.png'
 
-const ModalPruebas = ({ albumsAll, setAlbums, paginationInfo, setAlbumTitle }) => {
-  const [modalVisible, setModalVisible] = useState(false)
-
+const ModalPruebas = ({
+  albumsAll, setAlbums, paginationInfo, setAlbumTitle, setModalVisible, modalVisible
+}) => {
   // console.log('albumsAllModal', albumsAll)
   const handleAlbumPress = async (albumTitle) => {
     setAlbumTitle(albumTitle)
-    console.log('albumTitle', albumTitle)
+    // console.log('albumTitle', albumTitle)
     try {
       const response = await getOneAlbum(albumTitle, albumsAll, paginationInfo)
       const newAlbum = response.assets // Asume que 'assets' contiene los álbumes que quieres agregar
       console.log('newAlbum.length', newAlbum.length)
 
-      setAlbums(prevAlbums => [...prevAlbums, ...newAlbum]) // Agrega los nuevos álbumes a la lista existente
+      setAlbums(newAlbum) // Agrega los nuevos álbumes a la lista existente
       if (newAlbum.length === 0) {
         Alert.alert('Error', 'No hay videos en el álbum')
+      } else {
+        setModalVisible(false)
       }
     } catch (error) {
       console.error('Error al obtener el álbum:', error)
       Alert.alert('Error', 'No se pudo obtener el álbum')
     }
   }
+
+  useEffect(() => {
+    if (albumsAll.length !== 0) {
+      setModalVisible(true)
+    }
+  }, [albumsAll])
 
   return (
     <View style={styles.centeredView}>
@@ -36,35 +45,27 @@ const ModalPruebas = ({ albumsAll, setAlbums, paginationInfo, setAlbumTitle }) =
         }}
       >
         <View style={styles.centeredView}>
+          <Image
+            source={logo}
+            style={{ width: 150, borderRadius: 10 }}
+          />
           <View style={styles.modalView}>
-            {albumsAll.length !== 0 && (
-              <ScrollView style={styles.scrollView}>
-                <Text style={styles.modalText}>lista de albums!</Text>
-                {albumsAll.map((album, index) => (
-                  <View key={index} style={{ margin: 5 }}>
-                    <Button
-                      title={album.title}
-                      onPress={() => handleAlbumPress(album.title)}
-                    />
-                  </View>
-                ))}
-              </ScrollView>
-            )}
+            <ScrollView style={styles.scrollView}>
+              <Text style={styles.modalText}>Selecciona un album</Text>
+              {albumsAll.map((album, index) => (
+                <View key={index} style={{ margin: 5 }}>
+                  <Button
+                    title={album.title}
+                    onPress={() => handleAlbumPress(album.title)}
+                    color='#ff1b15'
+                  />
+                </View>
+              ))}
+            </ScrollView>
           </View>
-          <Pressable
-            style={[styles.button, styles.buttonClose]}
-            onPress={() => setModalVisible(!modalVisible)}
-          >
-            <Text style={styles.textStyle}>Cerrar</Text>
-          </Pressable>
         </View>
       </Modal>
-      <Pressable
-        style={[styles.button, styles.buttonOpen]}
-        onPress={() => setModalVisible(true)}
-      >
-        <Text style={styles.textStyle}>Show Modal</Text>
-      </Pressable>
+
     </View>
   )
 }
@@ -74,11 +75,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22
+    backgroundColor: '#000'
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: '#fec115',
     borderRadius: 20,
     padding: 35,
     alignItems: 'center',
@@ -95,13 +96,8 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 20,
     padding: 10,
-    elevation: 2
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF'
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3'
+    elevation: 2,
+    backgroundColor: '#fec115'
   },
   textStyle: {
     color: 'white',
@@ -110,8 +106,11 @@ const styles = StyleSheet.create({
   },
   modalText: {
     marginBottom: 15,
-    textAlign: 'center'
+    textAlign: 'center',
+    color: '#fff',
+    fontSize: 20
   }
+
 })
 
 export default ModalPruebas

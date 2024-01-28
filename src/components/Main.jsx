@@ -3,25 +3,50 @@ import { Prueba } from './Prueba'
 import { View } from 'react-native'
 import { getAlbums } from '../utils/getAlbums'
 import ModalPruebas from './ModalPruebas'
+// import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Main = () => {
+  const [modalVisible, setModalVisible] = useState(false)
   const [albumsAll, setAlbumsAll] = useState([])
   const [albums, setAlbums] = useState([])
   const [albumTitle, setAlbumTitle] = useState([])
-  const [paginationInfo, setPaginationInfo] = useState({
-    hasNextPage: true,
-    endCursor: null
-  })
+  // const [paginationInfo, setPaginationInfo] = useState({
+  //   hasNextPage: true,
+  //   endCursor: null
+  // })
+
+  // // Intenta cargar los datos del almacenamiento local
+  // useEffect(() => {
+  //   const loadAlbumsFromStorage = async () => {
+  //     const storedAlbumsAll = await AsyncStorage.getItem('albumsAll')
+  //     if (storedAlbumsAll) setAlbumsAll(JSON.parse(storedAlbumsAll))
+  //   }
+
+  //   loadAlbumsFromStorage()
+  // }, [])
+
+  // // Actualiza el almacenamiento local cuando albumsAll cambia
+  // useEffect(() => {
+  //   const updateStorage = async () => {
+  //     await AsyncStorage.setItem('albumsAll', JSON.stringify(albumsAll))
+  //   }
+
+  //   if (albumsAll.length > 0) {
+  //     updateStorage()
+  //   }
+  // }, [albumsAll])
 
   // console.log('paginationInfo', paginationInfo)
 
   useEffect(() => {
     // Llamar a getAlbums y actualizar el estado local con los videos
-    getAlbums().then(videos => {
-      // console.log('videos', videos)
-      setAlbumsAll(videos)
-    })
-  }, [])
+    // solo si no se han cargado previamente del almacenamiento
+    if (albumsAll.length === 0) {
+      getAlbums().then(videos => {
+        setAlbumsAll(videos)
+      })
+    }
+  }, [albumsAll])
 
   // const getAllVideosFromAlbum = async (albumName, albumsAll) => {
   //   let paginationInfo = { hasNextPage: true, endCursor: null }
@@ -46,22 +71,29 @@ const Main = () => {
   //   console.log('Todos los videos:', videos)
   // })
 
-  // console.log('albumsAll', albumsAll)
-  // console.log('albums', albums)
+  console.log('albumTitle', albumTitle)
 
   return (
     <>
-      {albums.length === 0 && <ModalPruebas albumsAll={albumsAll} setAlbums={setAlbums} paginationInfo={paginationInfo} setPaginationInfo={setPaginationInfo} setAlbumTitle={setAlbumTitle} />}
-      <View style={{ backgroundColor: '#ff1b15' }}>
-
-        {albums.length > 0 && <Prueba
-          videos={albums}
-          setAlbums={setAlbums}
-          paginationInfo={paginationInfo}
-          setPaginationInfo={setPaginationInfo}
+      {(albums.length === 0 || modalVisible) &&
+        <ModalPruebas
           albumsAll={albumsAll}
-          albumTitle={albumTitle}
-                              />}
+          setAlbums={setAlbums}
+          setAlbumTitle={setAlbumTitle}
+          setModalVisible={setModalVisible}
+          modalVisible={modalVisible}
+        />}
+      <View style={{ backgroundColor: '#000' }}>
+
+        {albums.length > 0 &&
+          <Prueba
+            videos={albums}
+            setAlbums={setAlbums}
+            albumsAll={albumsAll}
+            albumTitle={albumTitle}
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+          />}
       </View>
 
     </>

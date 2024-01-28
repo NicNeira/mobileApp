@@ -1,65 +1,66 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Button, FlatList, Modal, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { LogoHeader } from './LogoHeader'
 import { VideoInfo } from './VideoInfo.jsx'
-import { CloseIcon } from '../../assets/svg/CloseIcon.jsx'
 import { Video, ResizeMode } from 'expo-av'
 import { getOneAlbum } from '../utils/getOneAlbum.js'
 
-export const Prueba = ({ videos, setAlbums, paginationInfo, setPaginationInfo, albumsAll, albumTitle }) => {
-  const [isLoadingMore, setIsLoadingMore] = useState(false)
-  const [modalVisible, setModalVisible] = useState(false)
+export const Prueba = ({ videos, albumTitle, modalVisible, setModalVisible }) => {
+  // const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [selectedVideo, setSelectedVideo] = useState(null)
+  const [selectedVideoName, setSelectedVideoName] = useState(null)
+  const [videoPlayer, setVideoPlayer] = useState(false)
   const [status, setStatus] = React.useState({})
 
-  const [isMounted, setIsMounted] = useState(false)
+  // const [isMounted, setIsMounted] = useState(false)
 
   const video = React.useRef(null)
 
   // Funcion para cargar mas videos al final de la lista
-  const loadMoreVideos = async () => {
-    // if (!paginationInfo || !paginationInfo.hasNextPage) return
+  // const loadMoreVideos = async () => {
+  //   // if (!paginationInfo || !paginationInfo.hasNextPage) return
 
-    // console.log('paginationInfo.endCursor', paginationInfo.endCursor)
+  //   // console.log('paginationInfo.endCursor', paginationInfo.endCursor)
 
-    // const moreVideos = await getOneAlbum(albumTitle, albumsAll, paginationInfo.endCursor)
-    // console.log('moreVideos', moreVideos)
+  //   // const moreVideos = await getOneAlbum(albumTitle, albumsAll, paginationInfo.endCursor)
+  //   // console.log('moreVideos', moreVideos)
 
-    // setAlbums(prevAlbums => { // Crear un nuevo conjunto con los IDs de los videos existentes
-    //   const existingIds = new Set(prevAlbums.map(video => video.id))
+  //   // setAlbums(prevAlbums => { // Crear un nuevo conjunto con los IDs de los videos existentes
+  //   //   const existingIds = new Set(prevAlbums.map(video => video.id))
 
-    //   // Filtrar los nuevos videos, manteniendo solo aquellos que no están ya en el conjunto
-    //   const uniqueNewVideos = moreVideos.assets.filter(video => !existingIds.has(video.id))
+  //   //   // Filtrar los nuevos videos, manteniendo solo aquellos que no están ya en el conjunto
+  //   //   const uniqueNewVideos = moreVideos.assets.filter(video => !existingIds.has(video.id))
 
-    //   // Devolver los videos existentes combinados con los nuevos videos únicos
-    //   return [...prevAlbums, ...uniqueNewVideos]
-    // })
+  //   //   // Devolver los videos existentes combinados con los nuevos videos únicos
+  //   //   return [...prevAlbums, ...uniqueNewVideos]
+  //   // })
 
-    if (paginationInfo.hasNextPage) {
-      const moreVideos = await getOneAlbum(albumTitle, albumsAll, paginationInfo.endCursor)
-      console.log('moreVideos', moreVideos)
+  //   if (paginationInfo.hasNextPage) {
+  //     const moreVideos = await getOneAlbum(albumTitle, albumsAll, paginationInfo.endCursor)
+  //     console.log('moreVideos', moreVideos)
 
-      setAlbums(prevAlbums => { // Crear un nuevo conjunto con los IDs de los videos existentes
-        const existingIds = new Set(prevAlbums.map(video => video.id))
+  //     setAlbums(prevAlbums => { // Crear un nuevo conjunto con los IDs de los videos existentes
+  //       const existingIds = new Set(prevAlbums.map(video => video.id))
 
-        // Filtrar los nuevos videos, manteniendo solo aquellos que no están ya en el conjunto
-        const uniqueNewVideos = moreVideos.assets.filter(video => !existingIds.has(video.id))
+  //       // Filtrar los nuevos videos, manteniendo solo aquellos que no están ya en el conjunto
+  //       const uniqueNewVideos = moreVideos.assets.filter(video => !existingIds.has(video.id))
 
-        // Devolver los videos existentes combinados con los nuevos videos únicos
-        return [...prevAlbums, ...uniqueNewVideos]
-      })
-    }
-  }
+  //       // Devolver los videos existentes combinados con los nuevos videos únicos
+  //       return [...prevAlbums, ...uniqueNewVideos]
+  //     })
+  //   }
+  // }
 
   const handlePress = (item) => {
     setSelectedVideo(item.uri)
-    setModalVisible(true)
+    setSelectedVideoName(item.filename)
+    setVideoPlayer(true)
   }
 
   return (
     <>
       <StatusBar barStyle='default' />
-      <LogoHeader />
+      <LogoHeader albumTitle={albumTitle} setModalVisible={setModalVisible} />
       {videos.lenght === 0
         ? <Text>No hay videos</Text>
         : <FlatList
@@ -68,48 +69,41 @@ export const Prueba = ({ videos, setAlbums, paginationInfo, setPaginationInfo, a
               <TouchableOpacity onPress={() => handlePress(item)}><VideoInfo title={item.filename} videoSource={item.uri} /></TouchableOpacity>
             )}
             keyExtractor={item => item.id.toString()}
-            onEndReached={loadMoreVideos}
-            onEndReachedThreshold={0.1} // Determina qué tan cerca del final de la lista debe estar el usuario para cargar más
+            // onEndReached={loadMoreVideos}
+            // onEndReachedThreshold={0.1} // Determina qué tan cerca del final de la lista debe estar el usuario para cargar más
           />}
+      <Button
+        title='Cerrar'
+        onPress={() => setVideoPlayer(false)}
+      />
       <Modal
         animationType='slide'
         transparent={false}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
+        visible={videoPlayer}
+        onRequestClose={() => setVideoPlayer(false)}
       >
-        <View style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'green' }}>
-          <View style={{ display: 'flex', flexDirection: 'row', backgroundColor: 'blue' }}>
-            <View>
-              <Text>Text in modal!</Text>
-            </View>
-            {/* flex: 1 Añadido para empujar el contenido a la derecha    */}
-            <View style={{ flex: 1 }} />
-            <TouchableOpacity onPress={() => setModalVisible(false)} style={{ backgroundColor: 'red' }}>
-              <CloseIcon />
-            </TouchableOpacity>
-            <View />
-          </View>
-          <View style={styles.container}>
-            {selectedVideo
-              ? <Video
-                  ref={video}
-                  style={styles.video}
-                  source={{
-                    uri: selectedVideo
-                  }}
-                  useNativeControls
-                  resizeMode={ResizeMode.CONTAIN}
-                  isLooping
-                  onPlaybackStatusUpdate={status => setStatus(() => status)}
-                />
-              : <Text>No hay video</Text>}
-            <View style={styles.buttons}>
-              <Button
-                title={status.isPlaying ? 'Pause' : 'Play'}
-                onPress={() =>
-                  status.isPlaying ? video.current.pauseAsync() : video.current.playAsync()}
+
+        <View style={styles.container}>
+          {selectedVideo
+            ? <Video
+                ref={video}
+                style={styles.video}
+                source={{
+                  uri: selectedVideo
+                }}
+                useNativeControls
+                resizeMode={ResizeMode.CONTAIN}
+                isLooping
+                onPlaybackStatusUpdate={status => setStatus(() => status)}
+                key={selectedVideo.id}
               />
-            </View>
+            : <Text>No hay video</Text>}
+          <Text style={styles.text}>{selectedVideoName}</Text>
+          <View style={styles.buttons}>
+            <Button
+              title='Cerrar'
+              onPress={() => setVideoPlayer(false)}
+            />
           </View>
         </View>
       </Modal>
@@ -119,17 +113,25 @@ export const Prueba = ({ videos, setAlbums, paginationInfo, setPaginationInfo, a
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#ecf0f1'
+    backgroundColor: '#000'
   },
   video: {
-    alignSelf: 'center',
-    width: 320,
-    height: 200
+    resizeMode: 'contain',
+    height: 500,
+    width: 300
   },
   buttons: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop: 20
+  },
+  text: {
+    fontSize: 20,
+    marginTop: 10,
+    color: '#fff'
   }
 })
