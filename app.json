@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "Envasadora Stiavelli",
-    "slug": "Envasadora Stiavelli",
+    "name": "Stiavelli",
+    "slug": "mobile-expo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo-lucchetti@2x-150x150.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logo-lucchetti@2x-150x150.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -28,7 +28,7 @@
       "package": "com.pipita.mobileexpo"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/logo-lucchetti@2x-150x150.png"
     },
     "extra": {
       "eas": {

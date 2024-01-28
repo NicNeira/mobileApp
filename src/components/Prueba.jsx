@@ -1,51 +1,60 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, FlatList, Modal, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { LogoHeader } from './LogoHeader'
 import { VideoInfo } from './VideoInfo.jsx'
 import { CloseIcon } from '../../assets/svg/CloseIcon.jsx'
 import { Video, ResizeMode } from 'expo-av'
+import { getOneAlbum } from '../utils/getOneAlbum.js'
 
-export const Prueba = ({ videos }) => {
+export const Prueba = ({ videos, setAlbums, paginationInfo, setPaginationInfo, albumsAll, albumTitle }) => {
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedVideo, setSelectedVideo] = useState(null)
+  const [status, setStatus] = React.useState({})
 
-  console.log(selectedVideo)
+  const [isMounted, setIsMounted] = useState(false)
 
   const video = React.useRef(null)
-  const [status, setStatus] = React.useState({})
+
+  // Funcion para cargar mas videos al final de la lista
+  const loadMoreVideos = async () => {
+    // if (!paginationInfo || !paginationInfo.hasNextPage) return
+
+    // console.log('paginationInfo.endCursor', paginationInfo.endCursor)
+
+    // const moreVideos = await getOneAlbum(albumTitle, albumsAll, paginationInfo.endCursor)
+    // console.log('moreVideos', moreVideos)
+
+    // setAlbums(prevAlbums => { // Crear un nuevo conjunto con los IDs de los videos existentes
+    //   const existingIds = new Set(prevAlbums.map(video => video.id))
+
+    //   // Filtrar los nuevos videos, manteniendo solo aquellos que no están ya en el conjunto
+    //   const uniqueNewVideos = moreVideos.assets.filter(video => !existingIds.has(video.id))
+
+    //   // Devolver los videos existentes combinados con los nuevos videos únicos
+    //   return [...prevAlbums, ...uniqueNewVideos]
+    // })
+
+    if (paginationInfo.hasNextPage) {
+      const moreVideos = await getOneAlbum(albumTitle, albumsAll, paginationInfo.endCursor)
+      console.log('moreVideos', moreVideos)
+
+      setAlbums(prevAlbums => { // Crear un nuevo conjunto con los IDs de los videos existentes
+        const existingIds = new Set(prevAlbums.map(video => video.id))
+
+        // Filtrar los nuevos videos, manteniendo solo aquellos que no están ya en el conjunto
+        const uniqueNewVideos = moreVideos.assets.filter(video => !existingIds.has(video.id))
+
+        // Devolver los videos existentes combinados con los nuevos videos únicos
+        return [...prevAlbums, ...uniqueNewVideos]
+      })
+    }
+  }
 
   const handlePress = (item) => {
     setSelectedVideo(item.uri)
     setModalVisible(true)
   }
-
-  // Later on in your styles..
-  // const styles = StyleSheet.create({
-  //   backgroundVideo: {
-  //     position: 'absolute',
-  //     top: 0,
-  //     left: 0,
-  //     bottom: 0,
-  //     right: 0
-  //   }
-  // })
-
-  const styles = StyleSheet.create({
-    container: {
-      justifyContent: 'center',
-      backgroundColor: '#ecf0f1'
-    },
-    video: {
-      alignSelf: 'center',
-      width: 320,
-      height: 200
-    },
-    buttons: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center'
-    }
-  })
 
   return (
     <>
@@ -58,7 +67,9 @@ export const Prueba = ({ videos }) => {
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => handlePress(item)}><VideoInfo title={item.filename} videoSource={item.uri} /></TouchableOpacity>
             )}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.id.toString()}
+            onEndReached={loadMoreVideos}
+            onEndReachedThreshold={0.1} // Determina qué tan cerca del final de la lista debe estar el usuario para cargar más
           />}
       <Modal
         animationType='slide'
@@ -105,3 +116,20 @@ export const Prueba = ({ videos }) => {
     </>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    backgroundColor: '#ecf0f1'
+  },
+  video: {
+    alignSelf: 'center',
+    width: 320,
+    height: 200
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+})
