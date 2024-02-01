@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Prueba } from './Prueba'
-import { View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { getAlbums } from '../utils/getAlbums'
 import ModalPruebas from './ModalPruebas'
 // import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -10,6 +10,7 @@ const Main = () => {
   const [albumsAll, setAlbumsAll] = useState([])
   const [albums, setAlbums] = useState([])
   const [albumTitle, setAlbumTitle] = useState([])
+
   // const [paginationInfo, setPaginationInfo] = useState({
   //   hasNextPage: true,
   //   endCursor: null
@@ -41,12 +42,12 @@ const Main = () => {
   useEffect(() => {
     // Llamar a getAlbums y actualizar el estado local con los videos
     // solo si no se han cargado previamente del almacenamiento
-    if (albumsAll.length === 0) {
-      getAlbums().then(videos => {
-        setAlbumsAll(videos)
-      })
-    }
-  }, [albumsAll])
+    getAlbums().then(videos => {
+      setAlbums(videos)
+    })
+  }, [])
+
+  console.log('albumsAll', albumsAll)
 
   // const getAllVideosFromAlbum = async (albumName, albumsAll) => {
   //   let paginationInfo = { hasNextPage: true, endCursor: null }
@@ -71,23 +72,23 @@ const Main = () => {
   //   console.log('Todos los videos:', videos)
   // })
 
-  console.log('albumTitle', albumTitle)
+  console.log('albums', albums)
 
   return (
     <>
-      {(albums.length === 0 || modalVisible) &&
+      {/* {(albums.length === 0 || modalVisible) &&
         <ModalPruebas
           albumsAll={albumsAll}
           setAlbums={setAlbums}
           setAlbumTitle={setAlbumTitle}
           setModalVisible={setModalVisible}
           modalVisible={modalVisible}
-        />}
+        />} */}
       <View style={{ backgroundColor: '#000' }}>
 
-        {albums.length > 0 &&
+        {albumsAll.length > 0 &&
           <Prueba
-            videos={albums}
+            albums={albums}
             setAlbums={setAlbums}
             albumsAll={albumsAll}
             albumTitle={albumTitle}

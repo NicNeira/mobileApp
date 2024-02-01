@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, FlatList, Modal, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { LogoHeader } from './LogoHeader'
 import { VideoInfo } from './VideoInfo.jsx'
 import { Video, ResizeMode } from 'expo-av'
 import { getOneAlbum } from '../utils/getOneAlbum.js'
+import { getAlbums } from '../utils/getAlbums.js'
 
-export const Prueba = ({ videos, albumTitle, modalVisible, setModalVisible }) => {
+export const Prueba = ({ albums, albumTitle, modalVisible, setModalVisible, setAlbums }) => {
   // const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [selectedVideo, setSelectedVideo] = useState(null)
   const [selectedVideoName, setSelectedVideoName] = useState(null)
@@ -15,7 +16,6 @@ export const Prueba = ({ videos, albumTitle, modalVisible, setModalVisible }) =>
   // const [isMounted, setIsMounted] = useState(false)
 
   const video = React.useRef(null)
-
   // Funcion para cargar mas videos al final de la lista
   // const loadMoreVideos = async () => {
   //   // if (!paginationInfo || !paginationInfo.hasNextPage) return

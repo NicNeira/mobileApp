@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Alert, Modal, StyleSheet, Text, View, Button, ScrollView, Image } from 'react-native'
 import { getOneAlbum } from '../utils/getOneAlbum'
 import logo from '../../assets/marca_lucchetti-040822.png'
+import { getAlbums } from '../utils/getAlbums'
 
 const ModalPruebas = ({
   albumsAll, setAlbums, paginationInfo, setAlbumTitle, setModalVisible, modalVisible
@@ -11,7 +12,7 @@ const ModalPruebas = ({
     setAlbumTitle(albumTitle)
     // console.log('albumTitle', albumTitle)
     try {
-      const response = await getOneAlbum(albumTitle, albumsAll, paginationInfo)
+      const response = await getAlbums()
       const newAlbum = response.assets // Asume que 'assets' contiene los álbumes que quieres agregar
       console.log('newAlbum.length', newAlbum.length)
 

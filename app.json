@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logo-lucchetti@2x-150x150.png",
         "backgroundColor": "#ffffff",
         "permissions": [
           "READ_EXTERNAL_STORAGE"

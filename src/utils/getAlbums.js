@@ -17,21 +17,17 @@ export const getAlbums = async () => {
   // console.log('albumsAll', albumsAll)
 
   // Get one Album
-  // const album = albumsAll.find(album => album.title === 'WhatsApp Video')
-  // console.log(album)
+  const album = albumsAll.find(album => album.title === 'Stiavelli')
+  console.log('album', album)
 
   // Get videos from album
-  // if (albumsAll) {
-  //   const videos = await MediaLibrary.getAssetsAsync({
-  //     mediaType: MediaLibrary.MediaType.video,
-  //     albumsAll
-  //   })
-  //   console.log('videos', videos)
-  //   return videos
-  // }
-
-  if (albumsAll) {
-    return albumsAll
+  if (album) {
+    const videos = await MediaLibrary.getAssetsAsync({
+      mediaType: MediaLibrary.MediaType.video,
+      album
+    })
+    console.log('videos', videos)
+    return videos
   }
 
   return []
