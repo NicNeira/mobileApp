@@ -1,38 +1,14 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Alert, Modal, StyleSheet, Text, View, Button, ScrollView, Image } from 'react-native'
-import { getOneAlbum } from '../utils/getOneAlbum'
 import logo from '../../assets/marca_lucchetti-040822.png'
-import { getAlbums } from '../utils/getAlbums'
 
 const ModalPruebas = ({
-  albumsAll, setAlbums, paginationInfo, setAlbumTitle, setModalVisible, modalVisible
+  albumsAll, setAlbumTitle, setModalVisible, modalVisible
 }) => {
   // console.log('albumsAllModal', albumsAll)
   const handleAlbumPress = async (albumTitle) => {
     setAlbumTitle(albumTitle)
-    // console.log('albumTitle', albumTitle)
-    try {
-      const response = await getAlbums()
-      const newAlbum = response.assets // Asume que 'assets' contiene los álbumes que quieres agregar
-      console.log('newAlbum.length', newAlbum.length)
-
-      setAlbums(newAlbum) // Agrega los nuevos álbumes a la lista existente
-      if (newAlbum.length === 0) {
-        Alert.alert('Error', 'No hay videos en el álbum')
-      } else {
-        setModalVisible(false)
-      }
-    } catch (error) {
-      console.error('Error al obtener el álbum:', error)
-      Alert.alert('Error', 'No se pudo obtener el álbum')
-    }
   }
-
-  useEffect(() => {
-    if (albumsAll.length !== 0) {
-      setModalVisible(true)
-    }
-  }, [albumsAll])
 
   return (
     <View style={styles.centeredView}>

@@ -1,34 +1,31 @@
 import * as MediaLibrary from 'expo-media-library'
-import { useState } from 'react'
+import { Alert } from 'react-native'
 
-export const getAlbums = async () => {
+export const getAlbums = async (AlbumToSearch) => {
   // Get all Albums
   const { status } = await MediaLibrary.requestPermissionsAsync()
 
-  // if (status !== 'granted') {
-  //   console.log('Permission not granted!')
-  //   return
-  // }
-
-  // console.log(status)
+  if (status !== 'granted') {
+    Alert.alert('Permiso denegado', 'No se concedieron los permisos para acceder a los álbumes.')
+    return
+  }
 
   const albumsAll = await MediaLibrary.getAlbumsAsync()
 
-  // console.log('albumsAll', albumsAll)
-
   // Get one Album
-  const album = albumsAll.find(album => album.title === 'Stiavelli')
-  console.log('album', album)
+  const album = albumsAll.find(album => album.title === AlbumToSearch)
 
   // Get videos from album
   if (album) {
     const videos = await MediaLibrary.getAssetsAsync({
       mediaType: MediaLibrary.MediaType.video,
-      album
+      album,
+      first: 50
     })
-    console.log('videos', videos)
     return videos
+  } else {
+    // Aquí manejas el caso donde no se encuentra el álbum
+    Alert.alert('Álbum no encontrado', `Es necesario crear una carpeta llamada ${AlbumToSearch} y guardar los videos allí.`)
+    return []
   }
-
-  return []
 }

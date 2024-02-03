@@ -1,9 +1,8 @@
 import React from 'react'
-import { Image, Pressable, Text, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
 import logo from '../../assets/marca_lucchetti-040822.png'
-import { AntDesign } from '@expo/vector-icons'
 
-export const LogoHeader = ({ albumTitle, setModalVisible }) => {
+export const LogoHeader = () => {
   return (
     <View>
 
@@ -28,10 +27,7 @@ export const LogoHeader = ({ albumTitle, setModalVisible }) => {
 
       }}
       >
-        <Text style={{ fontSize: 32, color: 'white' }}>{albumTitle}</Text>
-        <Pressable onPress={() => setModalVisible(true)}>
-          <AntDesign name='folderopen' size={24} color='white' />
-        </Pressable>
+        <Text style={{ fontSize: 32, color: 'white', marginBottom: 10 }}>Envasadora Stiavelli</Text>
       </View>
     </View>
   )

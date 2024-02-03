@@ -1,6 +1,6 @@
 import * as MediaLibrary from 'expo-media-library'
 
-export const getOneAlbum = async (albumName, albumsAll, paginationInfo) => {
+export const getOneAlbum = async (albumName, albumsAll, paginationInfo, setAlertNoAlbum) => {
   // Get one Album
   const album = albumsAll.find(album => album.title === albumName)
 

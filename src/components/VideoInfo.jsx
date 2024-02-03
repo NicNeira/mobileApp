@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Image, StatusBar, StyleSheet, Text, View } from 'react-native'
+import { Image, StatusBar, StyleSheet, Text, View, ActivityIndicator } from 'react-native'
 import * as VideoThumbnails from 'expo-video-thumbnails'
 
 export const VideoInfo = ({ title, videoSource }) => {
@@ -10,12 +10,12 @@ export const VideoInfo = ({ title, videoSource }) => {
       const { uri } = await VideoThumbnails.getThumbnailAsync(
         videoSource,
         {
-          time: 15000
+          time: 1000
         }
       )
       setImage(uri)
     } catch (e) {
-      console.warn(e)
+      console.warn('Error generating thumbnail:', e)
     }
   }
 
@@ -25,8 +25,8 @@ export const VideoInfo = ({ title, videoSource }) => {
 
   return (
     <View style={styles.item}>
-      {image ? <Image source={{ uri: image }} style={styles.image} /> : <Text>Loading...</Text>}
-      <Text style={styles.title} numberOfLines={1}>{title}</Text>
+      {image ? <Image source={{ uri: image }} style={styles.image} /> : <ActivityIndicator color='#ff1b15' />}
+      <Text style={styles.title}>{title}</Text>
     </View>
   )
 }
@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#ff1b15',
     borderRadius: 10
+
   },
   image: {
     width: 100,
